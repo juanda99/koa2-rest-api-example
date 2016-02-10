@@ -1,8 +1,8 @@
 // Export a function that takes the router
-export default router => {
+export default (router, prefix) => {
   // Set a prefix of our api, in this case locations
-  const api = 'users'
-  router.prefix(`/${api}`);
+  // const api = 'users'
+  router.prefix(`/${prefix}`);
 
   // GET to all locations.
   router.get('/',  (ctx, next) =>

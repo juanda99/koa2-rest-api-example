@@ -23,23 +23,23 @@ mongoose.connection.on('error', console.error)
 // Creates the application.
 const app = new Koa()
 // how to use koa-mount to make this work? Arghhhhh!
-// const api = new Koa();
-// api.use(convert(mount ('/api', app)))
+//const api = new Koa();
+//api.use(convert(mount ('/api', app)))
 
 // trust proxy
-app.proxy = true
+//app.proxy = true
 // sessions
-app.keys = ['your-session-secret']
+//app.keys = ['your-session-secret']
 
 
 // Applies all routes to the router.
-const user = routingUsers(Router())
-const employee = routingEmployees(Router())
+const user = routingUsers(Router(), 'api/users/')
+const employee = routingEmployees(Router(), 'api/employees/')
 
 app
   .use(logger()) // log requests, should be at the beginning
-  .use(convert(mount('/api', user.routes()))) // asign routes
-  .use(convert(mount('/api', employee.routes()))) // asign routes
+  .use(user.routes()) // asign routes
+  .use(employee.routes()) // asign routes
   .use(user.allowedMethods())
   .use(employee.allowedMethods())
   .use(convert(session())) // session not needed for an API??????
