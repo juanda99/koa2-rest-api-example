@@ -2,16 +2,24 @@
 import Koa from 'koa'
 import mongoose from 'mongoose'
 import logger from 'koa-logger'
-// import parser from 'koa-bodyparser';
+import bodyParser from 'koa-bodyparser';
 import convert from 'koa-convert'
 import serve from 'koa-static'
 import Router from 'koa-router'
 import session from 'koa-generic-session'
 import mount from 'koa-mount'
+import passport from 'koa-passport'
 
-// A seperate file with my routes.
-import routingUsers from './users'
-import routingEmployees from './employees'
+import users from './routes/users'
+import employees from './routes/employees'
+
+// Creates application and routes:
+const app = new Koa()
+const api = new Router({prefix: '/api'})
+api
+  .use('/users', users.routes())
+  .use('/employees', employees.routes())
+
 
 // config
 const config = require("./config/config")
@@ -20,28 +28,30 @@ const config = require("./config/config")
 mongoose.connect(config.mongo.url)
 mongoose.connection.on('error', console.error)
 
-// Creates the application.
-const app = new Koa()
-// how to use koa-mount to make this work? Arghhhhh!
-//const api = new Koa();
-//api.use(convert(mount ('/api', app)))
+
 
 // trust proxy
-//app.proxy = true
+app.proxy = true
 // sessions
-//app.keys = ['your-session-secret']
+app.keys = ['your-session-secret']
+
+// authentication
+require('./auth')
+app.use(passport.initialize())
+app.use(passport.session())
+
 
 
 // Applies all routes to the router.
-const user = routingUsers(Router(), 'api/users/')
-const employee = routingEmployees(Router(), 'api/employees/')
+// const user = routingUsers(Router(), 'api/users/')
+// const employee = routingEmployees(Router(), 'api/employees/')
+// const admin = routingAdmin(Router(), 'api/admin/')
 
 app
   .use(logger()) // log requests, should be at the beginning
-  .use(user.routes()) // asign routes
-  .use(employee.routes()) // asign routes
-  .use(user.allowedMethods())
-  .use(employee.allowedMethods())
+  .use(bodyParser())
+  .use(api.routes())
+  .use(api.allowedMethods())
   .use(convert(session())) // session not needed for an API??????
   .use(convert(serve(__dirname + '/public')))   // for static files like images
 

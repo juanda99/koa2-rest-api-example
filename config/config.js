@@ -1,15 +1,15 @@
-"use strict";
-var path = require("path");
-var _ = require("lodash");
+'use strict'
+var path = require("path")
+var _ = require("lodash")
 
-var env = process.env.NODE_ENV = process.env.NODE_ENV || "development";
+var env = process.env.NODE_ENV = process.env.NODE_ENV || "development"
 
 var base = {
   app: {
     root: path.normalize(path.join(__dirname, "/..")),
     env: env,
   },
-};
+}
 
 var specific = {
   development: {
@@ -41,6 +41,6 @@ var specific = {
       url: "mongodb://localhost/koaapi",
     },
   },
-};
+}
 
-module.exports = _.merge(base, specific[env]);
+module.exports = _.merge(base, specific[env])
