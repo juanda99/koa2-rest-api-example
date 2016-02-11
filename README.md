@@ -1,11 +1,12 @@
 # koa2-boilerplate for a REST API
-WIP:
-CRUD for entities users and employees (Mongoose).
-Authentication using passportjs 
+WIP!!!!!!
+
+Just listing resources at the moment.
 
 
-## Import sample data
+## Sample data
 We will use users and companies collection in the test database. 
+
 The following is a sample documents of the companies collection:
  
 ```
@@ -36,3 +37,15 @@ The following is a sample documents of the users collection:
   },
 ```
 json files were generated using an [online json generator](http://www.json-generator.com/) and can be imported to mongo using script *mongoimport.sh* provided.
+
+## Install
+```
+./mongoimport.sh
+npm install
+npm start
+```
+
+Open the browser using the following urls:
+* http://localhost/api/users for users resources
+* http://localhost/api/companies for companies resouces
+
