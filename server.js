@@ -11,21 +11,21 @@ import mount from 'koa-mount'
 import passport from 'koa-passport'
 
 import users from './routes/users'
-import employees from './routes/employees'
+import companies from './routes/companies'
 
-// Creates application and routes:
+// Creates application and apply all routers to the app:
 const app = new Koa()
-const api = new Router({prefix: '/api'})
+const api = new Router({
+  prefix: '/api'
+})
 api
   .use('/users', users.routes())
-  .use('/employees', employees.routes())
+  .use('/companies', companies.routes())
 
-
-// config
-const config = require("./config/config")
 
 // connect to the database
-mongoose.connect(config.mongo.url)
+import database from './config/database'
+mongoose.connect(database.url)
 mongoose.connection.on('error', console.error)
 
 
@@ -40,20 +40,13 @@ require('./auth')
 app.use(passport.initialize())
 app.use(passport.session())
 
-
-
-// Applies all routes to the router.
-// const user = routingUsers(Router(), 'api/users/')
-// const employee = routingEmployees(Router(), 'api/employees/')
-// const admin = routingAdmin(Router(), 'api/admin/')
-
 app
   .use(logger()) // log requests, should be at the beginning
   .use(bodyParser())
   .use(api.routes())
   .use(api.allowedMethods())
   .use(convert(session())) // session not needed for an API??????
-  .use(convert(serve(__dirname + '/public')))   // for static files like images
+  .use(convert(serve(__dirname + '/public'))) // for static files like images
 
 
 // Start the application.

@@ -1,7 +1,7 @@
+import Company from '../models/company'
 var router = require('koa-router')();
 router
-  .get('/',  (ctx, next) =>
-      ctx.body = 'hello employees!')
+  .get('/', async ctx => ctx.body = await Company.find({}))
   .post('/', async (ctx, next) =>
     ctx.body = await new Location(ctx.request.body).save())
   // Routes to /locations/id.

@@ -1,5 +1,3 @@
-'use strict';
-
 import mongoose from 'mongoose';
 import validate from 'mongoose-validator';
 import bcrypt from 'bcrypt-as-promised';
@@ -27,15 +25,19 @@ const userSchema = new mongoose.Schema({
 });
 
 userSchema.virtual('password')
-  .set(function setPassword(value) { this._password = value; })
-  .get(function getPassword() { return this._password; });
+  .set(function setPassword(value) {
+    this._password = value;
+  })
+  .get(function getPassword() {
+    return this._password;
+  });
 
 userSchema.pre('save', async function preSave(next) {
   if (!this.password) return next();
   try {
     this.hashed_password = await bcrypt.hash(this.password);
     next();
-  } catch (error) {
+  } catch ( error ) {
     next(error);
   }
 })
